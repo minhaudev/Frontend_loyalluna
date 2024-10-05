@@ -1,0 +1,103 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:prettier/recommended",
+    "plugin:tailwindcss/recommended"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "globals": {
+    "React": true,
+    "JSX": true
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "parser": "@typescript-eslint/parser",
+      "plugins": ["@typescript-eslint", "unused-imports"],
+      "extends": ["next/core-web-vitals"],
+      "parserOptions": {
+        "project": "./tsconfig.json"
+      },
+      "rules": {
+        "prettier/prettier": [
+          "error",
+          {
+            "endOfLine": "lf",
+            "tabWidth": 2,
+            "singleQuote": true,
+            "trailingComma": "es5",
+            "semi": true,
+            "printWidth": 100
+          }
+        ],
+        "react/destructuring-assignment": "off",
+        "jsx-a11y/anchor-is-valid": "off",
+        "react/require-default-props": "off",
+        "react/jsx-props-no-spreading": "off",
+        "react-hooks/exhaustive-deps": "warn",
+        "@next/next/no-img-element": "off",
+        "@typescript-eslint/comma-dangle": "off",
+        "@typescript-eslint/consistent-type-imports": [
+          "error",
+          {
+            "prefer": "type-imports",
+            "disallowTypeAnnotations": true,
+            "fixStyle": "inline-type-imports"
+          }
+        ],
+        "import/prefer-default-export": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "no-underscore-dangle": "off",
+        "no-console": "off",
+        "import/no-cycle": "off",
+        "unused-imports/no-unused-imports": "error",
+        "unused-imports/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
+        "no-restricted-exports": ["off", { "restrictedNamedExports": ["default"] }],
+        "new-cap": ["off", { "newIsCap": true }],
+        "no-plusplus": "off",
+        "@typescript-eslint/naming-convention": [
+          "warn",
+          {
+            "selector": "variable",
+            "types": ["boolean"],
+            "format": ["camelCase", "PascalCase", "UPPER_CASE", "snake_case"],
+            "leadingUnderscore": "allowSingleOrDouble"
+          }
+        ],
+        "no-return-assign": "off",
+        "react/display-name": "off",
+        "no-param-reassign": "off",
+        "@typescript-eslint/no-use-before-define": "off",
+        "@next/next/no-html-link-for-pages": "off",
+        "no-html-link-for-pages": "off",
+        "indent": "off",
+        "@typescript-eslint/indent": "off",
+        "jsx-a11y/alt-text": "off",
+        "import/no-extraneous-dependencies": "off",
+        "tailwindcss/no-custom-classname": "off",
+        "tailwindcss/classnames-order": "error"
+      }
+    }
+  ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "project": "./tsconfig.json"
+      }
+    },
+    "tailwindcss": {
+      "callees": ["classnames", "clsx", "cv", "cn", "cva", "tv"],
+      "config": "tailwind.config.js",
+      "cssFiles": ["**/*.css", "!**/node_modules", "!**/.*", "!**/dist", "!**/build"],
+      "cssFilesRefreshRate": 5000,
+      "removeDuplicates": true,
+      "skipClassAttribute": false,
+      "whitelist": [],
+      "tags": [],
+      "classRegex": "^class(Name)?$"
+    }
+  },
+  "ignorePatterns": ["node_modules/", "dist/", "out/", "build/"]
+}
