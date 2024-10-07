@@ -3,18 +3,18 @@
 import { useRouter } from 'next/navigation';
 import { NextUIProvider } from '@nextui-org/system';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
-import { type ThemeProviderProps } from 'next-themes/dist/types';
 
 export interface ProvidersProps {
   children: React.ReactNode;
-  themeProps?: ThemeProviderProps;
 }
-export function Providers({ children, themeProps }: ProvidersProps) {
+export function Providers({ children }: ProvidersProps) {
   const router = useRouter();
 
   return (
     <NextUIProvider navigate={router.push}>
-      <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
+      <NextThemesProvider attribute="class" forcedTheme="light">
+        {children}
+      </NextThemesProvider>
     </NextUIProvider>
   );
 }
