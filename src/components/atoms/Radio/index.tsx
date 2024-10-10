@@ -14,7 +14,7 @@ export default function Radio(props: RadioProps) {
         onClick={props?.handleOnchange}
         type="radio"
       />
-      <span className="ml-[-8px] text-[14px] ">{props?.content}</span>
+      <span className="ml-[-10px] text-[14px] ">{props?.content}</span>
     </HStack>
   );
 }
