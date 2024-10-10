@@ -20,39 +20,31 @@ jobs:
         with:
           node-version: 18 # Specify the Node.js version
 
-      # Install pnpm
-      - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 9.0.4
-          run_install: false
+      # Install yarn
+      - name: Install yarn
+        run: npm install --global yarn
 
-      # Get pnpm store directory
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
-
-      # Cache pnpm store
-      - name: Setup pnpm cache
+      # Cache yarn dependencies
+      - name: Setup yarn cache
         uses: actions/cache@v3
         with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+            ${{ runner.os }}-yarn-
 
       # Install dependencies
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: yarn install --frozen-lockfile
 
       # Run linter
       - name: Run linter
-        run: pnpm lint
+        run: yarn lint
 
       # Check code formatting
       - name: Check code formatting
-        run: pnpm format:check
+        run: yarn format:check
 
       # Check types
       - name: Check types
-        run: pnpm check-types
+        run: yarn check-types
