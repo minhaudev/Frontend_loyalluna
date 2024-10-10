@@ -61,7 +61,7 @@ const Input: React.FC<InputProps> = (props) => {
         {props.label && (
           <>
             <div className="font-medium text-[#0F1824]">{props.label}</div>
-            {props.isRequired && <p className="text-lg text-red">*</p>}
+            {props.isRequired && <p className="text-red text-lg">*</p>}
           </>
         )}
       </HStack>
@@ -81,7 +81,7 @@ const Input: React.FC<InputProps> = (props) => {
                 onClick={() => handleDeleteTask(index)}
                 aria-label={`Xóa tag ${task}`}
               >
-                <FontAwesomeIcon className="px-1 text-center text-sm text-primary" icon={faXmark} />
+                <FontAwesomeIcon className="text-primary px-1 text-center text-sm" icon={faXmark} />
               </button>
             </div>
           ))}
@@ -134,7 +134,7 @@ const Input: React.FC<InputProps> = (props) => {
           </div>
         )}
       </div>
-      {props.isError && <div className="ml-1 mt-2 text-red">{props.helperText}</div>}
+      {props.isError && <div className="text-red ml-1 mt-2">{props.helperText}</div>}
     </div>
   );
 };
