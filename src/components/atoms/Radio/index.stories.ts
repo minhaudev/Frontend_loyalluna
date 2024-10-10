@@ -7,15 +7,12 @@ const meta: Meta<typeof Radio> = {
   argTypes: {
     isChecked: {
       control: 'boolean',
-      description: 'Trạng thái của nút radio, xác định xem nó có được chọn hay không.',
     },
     handleOnchange: {
       action: 'handleOnchange',
-      description: 'Hàm này được gọi khi trạng thái của nút radio thay đổi.',
     },
     content: {
       control: 'text',
-      description: 'Nội dung hiển thị bên cạnh nút radio.',
     },
   },
 };
@@ -28,5 +25,6 @@ export const Primary: Story = {
   args: {
     isChecked: false,
     content: 'Theo sản phẩm trong đơn hàng',
+    handleOnchange: () => {},
   },
 };
