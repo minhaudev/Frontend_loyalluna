@@ -6,10 +6,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { HStack } from '../HStack';
 
 interface InputProps {
-  handleOnchange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (value: string | string[]) => void;
   className?: string;
   positionValue?: 'left' | 'right' | 'center';
-  value: string | number;
+  value: string | string[] | number;
   type?: string;
   helperText?: string;
   isRequired?: boolean;
@@ -20,19 +20,17 @@ interface InputProps {
   suffix?: IconProp;
   prefix?: IconProp;
   isDeleteContent?: boolean;
-  isInputTag?: boolean;
   tags?: string[] | undefined;
   isNote?: boolean;
-  variantsizes?: 'small' | 'medium' | 'large' | 'xlarge' | '2xlarge' | '3xlarge';
-  setTags?: (tags: string[]) => void | [];
-  setValue?: (value: string) => void;
+  size?: 'small' | 'medium' | 'large' | 'xlarge' | '2xlarge' | '3xlarge';
+  isTags?: boolean;
 }
 const positionValue = {
   left: 'text-left',
   right: 'text-right',
   center: 'text-center',
 };
-const variantsizes = {
+const size = {
   small: ' py-1',
   medium: ' py-2',
   large: ' py-3',
@@ -42,19 +40,34 @@ const variantsizes = {
 };
 const Input: React.FC<InputProps> = (props) => {
   const [isFocused, setIsFocused] = useState(false);
-  const sizeClass = variantsizes[props?.variantsizes || 'medium'];
+  const [inputValue, setInputValue] = useState('');
+  const sizeClass = size[props?.size || 'medium'];
   const possition = positionValue[props?.positionValue || 'left'];
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const value = props.value as string;
-    if (e.key === 'Enter' && value.trim() !== '' && props.isInputTag) {
-      props?.setTags?.([...(props?.tags ?? []), value.trim()]);
-      props?.setValue?.('');
+
+  const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (props.isTags) {
+      setInputValue(e.target.value);
+    } else {
+      props?.onChange?.(e.target.value);
     }
   };
-  const handleDeleteTask = (index: number) => {
-    const updatedTasks = props?.tags?.filter((_, i) => i !== index) ?? [];
-    props?.setTags?.(updatedTasks);
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && props.isTags) {
+      if (inputValue.trim() !== '') {
+        const currentTags = Array.isArray(props.value) ? props.value : [];
+        props?.onChange?.([...currentTags, inputValue.trim()]);
+        setInputValue('');
+      }
+      e.preventDefault();
+    }
   };
+
+  const handleDeleteTask = (index: number) => {
+    if (!props?.isTags || !Array.isArray(props.value)) return;
+    const updatedTags = props.value.filter((_, i) => i !== index);
+    props?.onChange?.(updatedTags);
+  };
+
   return (
     <div className="relative w-full">
       <HStack className="mb-1 gap-1">
@@ -67,32 +80,36 @@ const Input: React.FC<InputProps> = (props) => {
       </HStack>
 
       <div
-        className={`relative ${props?.isInputTag && 'px-2'} w-full rounded-md border ${props.isError ? 'border-red' : ''} ${isFocused ? 'border-primary' : 'border-gray-200'}`}
+        className={`relative ${props?.isTags && 'px-2'} w-full rounded-md border ${props.isError ? 'border-red' : ''} ${isFocused ? 'border-primary' : 'border-gray-200'}`}
       >
         <div className="flex flex-wrap items-center">
-          {props?.tags?.map((task, index) => (
-            <div
-              key={index}
-              className="bg-primary-light mr-[6px] flex items-center rounded border bg-gray-100 p-1"
-            >
-              <span className="text-gray-800">{task}</span>
-              <button
-                className="hover:text-red-700·ml-1·flex·items-center·justify-center"
-                onClick={() => handleDeleteTask(index)}
-                aria-label={`Xóa tag ${task}`}
+          {props?.isTags &&
+            (props?.value as string[])?.map((task, index) => (
+              <div
+                key={index}
+                className="bg-primary-light mr-[6px] flex items-center rounded border bg-gray-100 p-1"
               >
-                <FontAwesomeIcon className="text-primary px-1 text-center text-sm" icon={faXmark} />
-              </button>
-            </div>
-          ))}
+                <span className="text-gray-800">{task}</span>
+                <button
+                  className="hover:text-red-700·ml-1·flex·items-center·justify-center"
+                  onClick={() => handleDeleteTask(index)}
+                  aria-label={`Xóa tag ${task}`}
+                >
+                  <FontAwesomeIcon
+                    className="text-primary px-1 text-center text-sm"
+                    icon={faXmark}
+                  />
+                </button>
+              </div>
+            ))}
           {!props?.isNote ? (
             <input
               className={`min-w-[120px] grow ${props.prefix ? 'pl-[35px]' : 'pl-[4px]'} ${props.suffix ? 'pr-[30px]' : 'pr-[2px]'} ${props?.positionValue === 'right' ? 'pr-2' : ''} ${props.isDisabled ? 'cursor-not-allowed text-gray-400' : 'cursor-text'} ${sizeClass} ${possition} rounded-md border-0 text-[#0F1824] outline-none ${props.className}`}
               placeholder={props.placeholder}
-              onChange={props.handleOnchange}
+              onChange={handleOnchange}
               onKeyPress={handleKeyPress}
               type={props.type}
-              value={props.value}
+              value={props.isTags ? inputValue : props.value}
               aria-invalid={props.isError ? 'true' : 'false'}
               disabled={props.isDisabled}
               onFocus={() => setIsFocused(true)}
@@ -103,7 +120,7 @@ const Input: React.FC<InputProps> = (props) => {
               contentEditable={!props.isDisabled}
               tabIndex={0}
               className={`min-w-[120px] grow ${props.prefix ? 'pl-[35px]' : 'pl-[4px]'} ${props.suffix ? 'pr-[30px]' : 'pr-[2px]'} ${props?.positionValue === 'right' ? 'pr-2' : ''} ${props.isDisabled ? 'cursor-not-allowed text-gray-400' : 'cursor-text'} ${sizeClass} ${possition} rounded-md border-0 text-[#0F1824] outline-none ${props.className}`}
-              onInput={props.handleOnchange}
+              onInput={handleOnchange}
               onFocus={() => setIsFocused(props?.isDisabled ? false : true)}
               onBlur={() => setIsFocused(false)}
               onKeyDown={(e) => props.isDisabled && e.preventDefault()}
@@ -126,7 +143,7 @@ const Input: React.FC<InputProps> = (props) => {
         )}
         {props.value && !props.suffix && props.isDeleteContent && (
           <div
-            onClick={() => props.setValue?.('')}
+            onClick={() => props.onChange?.('')}
             className="absolute right-[14px] top-[1/2] -translate-y-1/2 cursor-pointer text-gray-400"
             aria-label="Xóa nội dung"
           >
