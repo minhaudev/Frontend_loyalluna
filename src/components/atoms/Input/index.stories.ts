@@ -1,5 +1,5 @@
 import { faMagnifyingGlass, faPencil } from '@fortawesome/free-solid-svg-icons';
-import { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import Input from './index';
 
@@ -7,8 +7,7 @@ const meta: Meta<typeof Input> = {
   component: Input,
   argTypes: {
     tags: { control: 'object' },
-    setTags: { action: 'setTags' },
-    setValue: { action: 'setValue' },
+    setTags: (newTags: any) => console.log(newTags),
     suffix: { control: 'object' },
     prefix: { control: 'object' },
     isDeleteContent: { control: 'boolean' },
@@ -17,8 +16,7 @@ const meta: Meta<typeof Input> = {
     isError: { control: 'boolean' },
     helperText: { control: 'text' },
     isDisabled: { control: 'boolean' },
-    rows: { control: 'number' },
-    maxRows: { control: 'number' },
+    isInputTag: { control: 'boolean' },
     label: { control: 'text' },
     placeholder: { control: 'text' },
     isRequired: { control: 'boolean' },
@@ -30,8 +28,8 @@ export default meta;
 
 type Story = StoryObj<typeof Input>;
 
-// Primary Story
 export const Primary: Story = {
+  tags: ['autodocs'],
   args: {
     label: 'Tên Khách hàng',
     isRequired: true,
@@ -42,6 +40,7 @@ export const Primary: Story = {
 };
 
 export const DisabledInput: Story = {
+  tags: ['autodocs'],
   args: {
     type: 'text',
     value: 'Chi nhánh mặc định',
@@ -50,6 +49,7 @@ export const DisabledInput: Story = {
 };
 
 export const textRight: Story = {
+  tags: ['autodocs'],
   args: {
     label: 'Công nợ',
     type: 'text',
@@ -60,18 +60,19 @@ export const textRight: Story = {
 };
 
 export const searchInput: Story = {
+  tags: ['autodocs'],
   args: {
     isDeleteContent: true,
     prefix: faMagnifyingGlass,
-    label: 'Công nợ',
     type: 'text',
-    value: 'dữ liệu nhập vào',
+    value: '',
     placeholder: 'Tìm kiếm theo mã đơn hàng,tên, SĐT khách hàng',
     handleOnchange: (e) => console.log(e.target.value),
   },
 };
 
 export const numberValue: Story = {
+  tags: ['autodocs'],
   args: {
     isDeleteContent: true,
     type: 'text',
@@ -83,6 +84,7 @@ export const numberValue: Story = {
 };
 
 export const note: Story = {
+  tags: ['autodocs'],
   args: {
     isNote: true,
     isDeleteContent: true,
@@ -95,10 +97,12 @@ export const note: Story = {
 };
 
 export const tagInput: Story = {
+  tags: ['autodocs'],
   args: {
     tags: ['tag1', 'tag2'],
     setTags: (newTags) => console.log(newTags),
     isDeleteContent: true,
+    isInputTag: true,
     type: 'text',
     label: 'Ghi chú',
     value: '',
@@ -109,6 +113,7 @@ export const tagInput: Story = {
 };
 
 export const pencil: Story = {
+  tags: ['autodocs'],
   args: {
     prefix: faPencil,
     isDeleteContent: true,
@@ -120,6 +125,7 @@ export const pencil: Story = {
 };
 
 export const errorInput: Story = {
+  tags: ['autodocs'],
   args: {
     isError: true,
     helperText: 'Lỗi rồi nè!',

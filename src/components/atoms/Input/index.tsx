@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import type { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faCircleXmark, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -14,8 +14,6 @@ interface InputProps {
   helperText?: string;
   isRequired?: boolean;
   isError?: boolean;
-  rows?: number;
-  maxRows?: number;
   label?: string;
   placeholder?: string;
   isDisabled?: boolean;
@@ -42,7 +40,6 @@ const variantsizes = {
   '2xlarge': 'h-[170px]',
   '3xlarge': 'h-[200px]',
 };
-
 const Input: React.FC<InputProps> = (props) => {
   const [isFocused, setIsFocused] = useState(false);
   const sizeClass = variantsizes[props?.variantsizes || 'medium'];
@@ -59,37 +56,38 @@ const Input: React.FC<InputProps> = (props) => {
     props?.setTags?.(updatedTasks);
   };
   return (
-    <div className="relative w-full ">
-      <HStack className="gap-1 mb-1">
+    <div className="relative w-full">
+      <HStack className="mb-1 gap-1">
         {props.label && (
           <>
-            <div className="text-[#0F1824] font-medium">{props.label}</div>
-            {props.isRequired && <p className="text-red text-lg">*</p>}
+            <div className="font-medium text-[#0F1824]">{props.label}</div>
+            {props.isRequired && <p className="text-lg text-red">*</p>}
           </>
         )}
       </HStack>
 
       <div
-        className={`relative w-full border rounded-md ${props.isError ? 'border-red' : ''} ${isFocused ? 'border-primary' : 'border-gray-200'}`}
+        className={`relative ${props?.isInputTag && 'px-2'} w-full rounded-md border ${props.isError ? 'border-red' : ''} ${isFocused ? 'border-primary' : 'border-gray-200'}`}
       >
-        <div className="flex flex-wrap items-center px-2">
+        <div className="flex flex-wrap items-center">
           {props?.tags?.map((task, index) => (
-            <div key={index} className="flex items-center bg-primary-light p-1 rounded mr-2">
+            <div
+              key={index}
+              className="bg-primary-light mr-[6px] flex items-center rounded border bg-gray-100 p-1"
+            >
               <span className="text-gray-800">{task}</span>
               <button
-                className="ml-1 flex justify-center items-center hover:text-red-700"
+                className="hover:text-red-700·ml-1·flex·items-center·justify-center"
                 onClick={() => handleDeleteTask(index)}
                 aria-label={`Xóa tag ${task}`}
               >
-                <FontAwesomeIcon className="text-sm px-1 text-primary text-center" icon={faXmark} />
+                <FontAwesomeIcon className="px-1 text-center text-sm text-primary" icon={faXmark} />
               </button>
             </div>
           ))}
           {!props?.isNote ? (
             <input
-              className={`flex-grow min-w-[120px] ${props.prefix ? 'pl-[30px]' : 'pl-[1px]'} ${
-                props.suffix ? 'pr-[30px]' : 'pr-[1px]'
-              } ${props.isDisabled ? 'cursor-not-allowed text-gray-400' : 'cursor-text'} ${sizeClass} outline-none border-0 rounded-md text-[#0F1824] ${possition} mr-2 ${props.className}`}
+              className={`min-w-[120px] grow ${props.prefix ? 'pl-[35px]' : 'pl-[4px]'} ${props.suffix ? 'pr-[30px]' : 'pr-[2px]'} ${props?.positionValue === 'right' ? 'pr-2' : ''} ${props.isDisabled ? 'cursor-not-allowed text-gray-400' : 'cursor-text'} ${sizeClass} ${possition} rounded-md border-0 text-[#0F1824] outline-none ${props.className}`}
               placeholder={props.placeholder}
               onChange={props.handleOnchange}
               onKeyPress={handleKeyPress}
@@ -104,9 +102,7 @@ const Input: React.FC<InputProps> = (props) => {
             <div
               contentEditable={!props.isDisabled}
               tabIndex={0}
-              className={`flex-grow min-w-[120px] ${props.prefix ? 'pl-[30px]' : 'pl-[2px]'} ${
-                props.suffix ? 'pr-[30px]' : 'pr-[2px]'
-              } ${props.isDisabled ? 'cursor-not-allowed text-gray-400' : 'cursor-text'} ${sizeClass} outline-none border-0 rounded-md text-[#0F1824] ${possition} break-words mr-2 ${props.className}`}
+              className={`min-w-[120px] grow ${props.prefix ? 'pl-[35px]' : 'pl-[4px]'} ${props.suffix ? 'pr-[30px]' : 'pr-[2px]'} ${props?.positionValue === 'right' ? 'pr-2' : ''} ${props.isDisabled ? 'cursor-not-allowed text-gray-400' : 'cursor-text'} ${sizeClass} ${possition} rounded-md border-0 text-[#0F1824] outline-none ${props.className}`}
               onInput={props.handleOnchange}
               onFocus={() => setIsFocused(props?.isDisabled ? false : true)}
               onBlur={() => setIsFocused(false)}
@@ -119,26 +115,26 @@ const Input: React.FC<InputProps> = (props) => {
         {props.prefix && (
           <FontAwesomeIcon
             icon={props.prefix}
-            className="absolute left-[14px] top-[50%] transform -translate-y-1/2 text-gray-400 cursor-pointer"
+            className="absolute left-[10px] top-1/2 -translate-y-1/2 cursor-pointer text-gray-400"
           />
         )}
         {props.suffix && (
           <FontAwesomeIcon
             icon={props.suffix}
-            className="absolute right-[14px] top-[50%] transform -translate-y-1/2 text-gray-400 cursor-pointer"
+            className="absolute right-[14px] top-[1/2] -translate-y-1/2 cursor-pointer text-gray-400"
           />
         )}
         {props.value && !props.suffix && props.isDeleteContent && (
           <div
             onClick={() => props.setValue?.('')}
-            className="absolute right-[14px] top-[50%] transform -translate-y-1/2 text-gray-400 cursor-pointer"
+            className="absolute right-[14px] top-[1/2] -translate-y-1/2 cursor-pointer text-gray-400"
             aria-label="Xóa nội dung"
           >
             <FontAwesomeIcon icon={faCircleXmark} />
           </div>
         )}
       </div>
-      {props.isError && <div className="text-red mt-2 ml-1">{props.helperText}</div>}
+      {props.isError && <div className="ml-1 mt-2 text-red">{props.helperText}</div>}
     </div>
   );
 };
