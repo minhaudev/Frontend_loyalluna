@@ -1,0 +1,58 @@
+name: Code check
+
+on:
+  pull_request:
+    branches: ['*']
+
+jobs:
+  code-check:
+    runs-on: ubuntu-latest
+    name: Code check
+    steps:
+      # Checkout the repository
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      # Set up Node.js environment
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18 # Specify the Node.js version
+
+      # Install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9.0.4
+          run_install: false
+
+      # Get pnpm store directory
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        run: echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      # Cache pnpm store
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      # Install dependencies
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      # Run linter
+      - name: Run linter
+        run: pnpm lint
+
+      # Check code formatting
+      - name: Check code formatting
+        run: pnpm format:check
+
+      # Check types
+      - name: Check types
+        run: pnpm check-types
