@@ -6,7 +6,6 @@ import Input from './index';
 const meta: Meta<typeof Input> = {
   component: Input,
   argTypes: {
-    tags: { control: 'object' },
     suffix: { control: 'object' },
     prefix: { control: 'object' },
     isDeleteContent: { control: 'boolean' },
@@ -52,7 +51,7 @@ export const textRight: Story = {
   args: {
     label: 'Công nợ',
     type: 'text',
-    positionValue: 'right',
+    position: 'right',
     placeholder: 'nhập công nợ khách hàng',
     onChange: (value: string | string[]) => console.log(value),
   },
@@ -75,8 +74,8 @@ export const numberValue: Story = {
   args: {
     isDeleteContent: true,
     type: 'text',
-    size: 'large',
-    positionValue: 'right',
+    size: 'lg',
+    position: 'right',
     placeholder: '0',
     onChange: (value: string | string[]) => console.log(value),
   },
@@ -89,7 +88,7 @@ export const note: Story = {
     isDeleteContent: true,
     type: 'text',
     label: 'Ghi chú',
-    size: 'xlarge',
+    size: '2xlg',
     placeholder: '0',
     onChange: (value: string | string[]) => console.log(value),
   },
@@ -98,13 +97,13 @@ export const note: Story = {
 export const tagInput: Story = {
   tags: ['autodocs'],
   args: {
-    tags: ['tag1', 'tag2'],
+    value: ['tag1', 'tag2'],
     isDeleteContent: true,
     isTags: true,
     type: 'text',
     label: 'Ghi chú',
-    value: '',
-    size: 'medium',
+
+    size: 'md',
     placeholder: 'Gõ kí tự và nhấn enter để thêm thuộc tính',
     onChange: (value: string | string[]) => console.log(value),
   },
@@ -116,7 +115,7 @@ export const pencil: Story = {
     prefix: faPencil,
     isDeleteContent: true,
     value: '',
-    size: 'medium',
+    size: 'md',
     placeholder: 'Nhập ghi chú đơn hàng',
     onChange: (value: string | string[]) => console.log(value),
   },
@@ -128,7 +127,18 @@ export const errorInput: Story = {
     isError: true,
     helperText: 'Lỗi rồi nè!',
     value: '',
-    size: 'medium',
+    size: 'md',
+    placeholder: 'Nhập ghi chú đơn hàng',
+    onChange: (value: string | string[]) => console.log(value),
+  },
+};
+
+export const helperText: Story = {
+  tags: ['autodocs'],
+  args: {
+    helperText: 'Đoạn này không có lỗi!',
+    value: '',
+    size: 'md',
     placeholder: 'Nhập ghi chú đơn hàng',
     onChange: (value: string | string[]) => console.log(value),
   },

@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import type { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faCircleXmark, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { twMerge } from 'tailwind-merge'; // Import twMerge
 
 import { HStack } from '../HStack';
 
 interface InputProps {
   onChange?: (value: string | string[]) => void;
   className?: string;
-  positionValue?: 'left' | 'right' | 'center';
+  position?: 'left' | 'right' | 'center';
   value: string | string[] | number;
   type?: string;
   helperText?: string;
@@ -22,40 +23,43 @@ interface InputProps {
   isDeleteContent?: boolean;
   tags?: string[] | undefined;
   isNote?: boolean;
-  size?: 'small' | 'medium' | 'large' | 'xlarge' | '2xlarge' | '3xlarge';
+  size?: 'sm' | 'md' | 'lg' | '2xlg' | '3xlg';
   isTags?: boolean;
 }
-const positionValue = {
+
+const positionClasses = {
   left: 'text-left',
   right: 'text-right',
   center: 'text-center',
 };
-const size = {
-  small: ' py-1',
-  medium: ' py-2',
-  large: ' py-3',
-  xlarge: 'h-[120px]',
-  '2xlarge': 'h-[170px]',
-  '3xlarge': 'h-[200px]',
+
+const sizeClasses = {
+  sm: 'py-1',
+  md: 'py-2',
+  lg: 'py-3',
+  '2xlg': 'h-[120px]',
+  '3xlg': 'h-[170px]',
 };
+
 const Input: React.FC<InputProps> = (props) => {
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState('');
-  const sizeClass = size[props?.size || 'medium'];
-  const possition = positionValue[props?.positionValue || 'left'];
+  const sizeClass = sizeClasses[props.size || 'md'];
+  const positionClass = positionClasses[props.position || 'left'];
 
-  const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (props.isTags) {
       setInputValue(e.target.value);
     } else {
-      props?.onChange?.(e.target.value);
+      props.onChange?.(e.target.value);
     }
   };
+
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && props.isTags) {
       if (inputValue.trim() !== '') {
         const currentTags = Array.isArray(props.value) ? props.value : [];
-        props?.onChange?.([...currentTags, inputValue.trim()]);
+        props.onChange?.([...currentTags, inputValue.trim()]);
         setInputValue('');
       }
       e.preventDefault();
@@ -63,9 +67,9 @@ const Input: React.FC<InputProps> = (props) => {
   };
 
   const handleDeleteTask = (index: number) => {
-    if (!props?.isTags || !Array.isArray(props.value)) return;
+    if (!props.isTags || !Array.isArray(props.value)) return;
     const updatedTags = props.value.filter((_, i) => i !== index);
-    props?.onChange?.(updatedTags);
+    props.onChange?.(updatedTags);
   };
 
   return (
@@ -80,18 +84,21 @@ const Input: React.FC<InputProps> = (props) => {
       </HStack>
 
       <div
-        className={`relative ${props?.isTags && 'px-2'} w-full rounded-md border ${props.isError ? 'border-red' : ''} ${isFocused ? 'border-primary' : 'border-gray-200'}`}
+        className={twMerge(
+          `relative ${props.isTags ? 'px-1' : ''} w-full rounded-md border ${props.isError ? 'border-red' : ''} ${isFocused ? 'border-primary' : 'border-gray-200'}`
+        )}
       >
         <div className="flex flex-wrap items-center">
-          {props?.isTags &&
-            (props?.value as string[])?.map((task, index) => (
+          {props.isTags &&
+            Array.isArray(props.value) &&
+            props.value.map((task, index) => (
               <div
                 key={index}
                 className="bg-primary-light mr-[6px] flex items-center rounded border bg-gray-100 p-1"
               >
                 <span className="text-gray-800">{task}</span>
                 <button
-                  className="hover:text-red-700·ml-1·flex·items-center·justify-center"
+                  className="ml-1 flex items-center justify-center hover:text-red-700"
                   onClick={() => handleDeleteTask(index)}
                   aria-label={`Xóa tag ${task}`}
                 >
@@ -102,11 +109,13 @@ const Input: React.FC<InputProps> = (props) => {
                 </button>
               </div>
             ))}
-          {!props?.isNote ? (
+          {!props.isNote ? (
             <input
-              className={`min-w-[120px] grow ${props.prefix ? 'pl-[35px]' : 'pl-[4px]'} ${props.suffix ? 'pr-[30px]' : 'pr-[2px]'} ${props?.positionValue === 'right' ? 'pr-2' : ''} ${props.isDisabled ? 'cursor-not-allowed text-gray-400' : 'cursor-text'} ${sizeClass} ${possition} rounded-md border-0 text-[#0F1824] outline-none ${props.className}`}
+              className={twMerge(
+                `min-w-[120px] grow ${props.prefix ? 'pl-[35px]' : 'pl-2'} ${props.suffix ? 'pr-[30px]' : 'pr-[2px]'} ${props.position === 'right' ? 'pr-2' : ''} ${props.isDisabled ? 'cursor-not-allowed text-gray-400' : 'cursor-text'} ${sizeClass} ${positionClass} rounded-md border-0 text-[#0F1824] outline-none ${props.className}`
+              )}
               placeholder={props.placeholder}
-              onChange={handleOnchange}
+              onChange={handleOnChange}
               onKeyPress={handleKeyPress}
               type={props.type}
               value={props.isTags ? inputValue : props.value}
@@ -119,9 +128,11 @@ const Input: React.FC<InputProps> = (props) => {
             <div
               contentEditable={!props.isDisabled}
               tabIndex={0}
-              className={`min-w-[120px] grow ${props.prefix ? 'pl-[35px]' : 'pl-[4px]'} ${props.suffix ? 'pr-[30px]' : 'pr-[2px]'} ${props?.positionValue === 'right' ? 'pr-2' : ''} ${props.isDisabled ? 'cursor-not-allowed text-gray-400' : 'cursor-text'} ${sizeClass} ${possition} rounded-md border-0 text-[#0F1824] outline-none ${props.className}`}
-              onInput={handleOnchange}
-              onFocus={() => setIsFocused(props?.isDisabled ? false : true)}
+              className={twMerge(
+                `min-w-[120px] grow ${props.prefix ? 'pl-[35px]' : 'pl-2'} ${props.suffix ? 'pr-[30px]' : 'pr-[2px]'} ${props.position === 'right' ? 'pr-2' : ''} ${props.isDisabled ? 'cursor-not-allowed text-gray-400' : 'cursor-text'} ${sizeClass} ${positionClass} rounded-md border-0 text-[#0F1824] outline-none ${props.className}`
+              )}
+              onInput={handleOnChange}
+              onFocus={() => setIsFocused(!props.isDisabled)}
               onBlur={() => setIsFocused(false)}
               onKeyDown={(e) => props.isDisabled && e.preventDefault()}
             >
@@ -151,7 +162,11 @@ const Input: React.FC<InputProps> = (props) => {
           </div>
         )}
       </div>
-      {props.isError && <div className="text-red ml-1 mt-2">{props.helperText}</div>}
+      {props.isError ? (
+        <div className="text-red ml-2 mt-[2px]">{props.helperText}</div>
+      ) : (
+        <div className="ml-2 mt-[2px] text-black">{props.helperText}</div>
+      )}
     </div>
   );
 };
