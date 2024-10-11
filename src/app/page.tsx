@@ -1,5 +1,4 @@
 'use client';
-
 export default function Home() {
-  return <div>this is a homepage</div>;
+  return <h1 className="flex items-center justify-center text-[30px]">hello Loyal Luna</h1>;
 }
