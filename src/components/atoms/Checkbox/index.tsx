@@ -75,7 +75,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>((props, ref) => {
         }}
       >
         {isSelected ? (
-          <Icons.checkbox
+          <Icons.checkboxIcon
             className={cn(
               size === 'sm' && 'size-4',
               size === 'md' && 'size-5',
