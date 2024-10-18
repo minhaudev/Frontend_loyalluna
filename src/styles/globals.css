@@ -5,3 +5,31 @@
 body {
   background: white;
 }
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 3.5px;
+}
+
+/* ::-webkit-scrollbar:hover {
+  width: 8px; 
+} */
+
+/* Scrollbar track */
+::-webkit-scrollbar-track {
+  background: #888;
+  border-radius: 5px;
+}
+
+/* Scrollbar handle */
+::-webkit-scrollbar-thumb {
+  background: #706f6f;
+  border-radius: 5px;
+  transition: width 0.3s ease;
+}
+
+/* Scrollbar handle khi hover */
+/* ::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  width: 8px; 
+  transition: width 0.3s ease;
+} */

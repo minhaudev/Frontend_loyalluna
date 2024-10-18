@@ -1,4 +1,6 @@
+import React from 'react';
 import { faMagnifyingGlass, faPencil } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { Meta, StoryObj } from '@storybook/react';
 
 import Input from './index';
@@ -9,12 +11,14 @@ const meta: Meta<typeof Input> = {
     suffix: { control: 'object' },
     prefix: { control: 'object' },
     isDeleteContent: { control: 'boolean' },
-    type: { control: 'select', options: ['text', 'number', 'password'] },
+    type: { control: 'select', options: ['text', 'number'] },
+    size: { control: 'select', option: ['sm', 'md', 'lg', '2xlg', '3xlg'] },
+    position: { control: 'select', option: ['right', 'left', 'center'] },
     value: { control: 'text' },
     isError: { control: 'boolean' },
     helperText: { control: 'text' },
     isDisabled: { control: 'boolean' },
-    isTags: { control: 'boolean' },
+
     label: { control: 'text' },
     placeholder: { control: 'text' },
     isRequired: { control: 'boolean' },
@@ -33,7 +37,7 @@ export const Primary: Story = {
     isRequired: true,
     type: 'text',
     value: '',
-    onChange: (value: string | string[]) => console.log(value),
+    onChange: (value: string | number | string[]) => console.log(value),
   },
 };
 
@@ -53,7 +57,7 @@ export const textRight: Story = {
     type: 'text',
     position: 'right',
     placeholder: 'nhập công nợ khách hàng',
-    onChange: (value: string | string[]) => console.log(value),
+    onChange: (value: string | number | string[]) => console.log(value),
   },
 };
 
@@ -61,11 +65,10 @@ export const searchInput: Story = {
   tags: ['autodocs'],
   args: {
     isDeleteContent: true,
-    prefix: faMagnifyingGlass,
-    type: 'text',
+    prefix: <FontAwesomeIcon icon={faMagnifyingGlass} />,
     value: '',
     placeholder: 'Tìm kiếm theo mã đơn hàng,tên, SĐT khách hàng',
-    onChange: (value: string | string[]) => console.log(value),
+    onChange: (value: string | number | string[]) => console.log(value),
   },
 };
 
@@ -77,7 +80,7 @@ export const numberValue: Story = {
     size: 'lg',
     position: 'right',
     placeholder: '0',
-    onChange: (value: string | string[]) => console.log(value),
+    onChange: (value: string | number | string[]) => console.log(value),
   },
 };
 
@@ -90,34 +93,19 @@ export const note: Story = {
     label: 'Ghi chú',
     size: '2xlg',
     placeholder: '0',
-    onChange: (value: string | string[]) => console.log(value),
-  },
-};
-
-export const tagInput: Story = {
-  tags: ['autodocs'],
-  args: {
-    value: ['tag1', 'tag2'],
-    isDeleteContent: true,
-    isTags: true,
-    type: 'text',
-    label: 'Ghi chú',
-
-    size: 'md',
-    placeholder: 'Gõ kí tự và nhấn enter để thêm thuộc tính',
-    onChange: (value: string | string[]) => console.log(value),
+    onChange: (value: string | number | string[]) => console.log(value),
   },
 };
 
 export const pencil: Story = {
   tags: ['autodocs'],
   args: {
-    prefix: faPencil,
+    prefix: <FontAwesomeIcon icon={faPencil} />,
     isDeleteContent: true,
     value: '',
     size: 'md',
     placeholder: 'Nhập ghi chú đơn hàng',
-    onChange: (value: string | string[]) => console.log(value),
+    onChange: (value: string | number | string[]) => console.log(value),
   },
 };
 
@@ -129,7 +117,7 @@ export const errorInput: Story = {
     value: '',
     size: 'md',
     placeholder: 'Nhập ghi chú đơn hàng',
-    onChange: (value: string | string[]) => console.log(value),
+    onChange: (value: string | number | string[]) => console.log(value),
   },
 };
 
@@ -140,6 +128,6 @@ export const helperText: Story = {
     value: '',
     size: 'md',
     placeholder: 'Nhập ghi chú đơn hàng',
-    onChange: (value: string | string[]) => console.log(value),
+    onChange: (value: string | number | string[]) => console.log(value),
   },
 };
