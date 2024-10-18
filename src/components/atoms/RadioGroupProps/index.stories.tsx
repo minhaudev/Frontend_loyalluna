@@ -1,8 +1,10 @@
 import { type Meta, type StoryObj } from '@storybook/react';
 
+import RadioGroup from '.';
 import Radio from './Radio/index';
 
 const meta: Meta<typeof Radio> = {
+  title: 'Components/Radio',
   component: Radio,
   argTypes: {
     value: {
@@ -12,7 +14,7 @@ const meta: Meta<typeof Radio> = {
       control: 'boolean',
     },
     onChange: {
-      action: 'handleOnchange',
+      action: 'onchange',
     },
     children: {
       control: {
@@ -30,19 +32,22 @@ export const Primary: Story = {
   tags: ['autodocs'],
   args: {
     isChecked: false,
-    onChange: () => {},
+    value: '1',
     children: 'Chọn đơn hàng này?',
+    onChange: () => {},
   },
 };
 
-// <RadioGroup
-// label="This is label"
-// value={selectedValue}
-// onChange={(value) => setSelectedValue(value)}
-// >
-// <Radio value="1">Option 1</Radio>
-// <Radio isChecked value="2">
-//   Option 2
-// </Radio>
-// <Radio value="3">Option 3</Radio>
-// </RadioGroup>
+export const RadioGroupExample: Story = {
+  render: () => (
+    <RadioGroup
+      onChange={(value) => console.log('Selected value:', value)}
+      label="This is label"
+      value="2"
+    >
+      <Radio value="1">Option 1</Radio>
+      <Radio value="2">Option 2</Radio>
+      <Radio value="3">Option 3</Radio>
+    </RadioGroup>
+  ),
+};

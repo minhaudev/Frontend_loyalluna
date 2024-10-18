@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { type ReactNode } from 'react';
 
 interface RadioGroupProps {
-  label?: string;
+  label?: ReactNode;
   value?: string;
   onChange: (value: string) => void;
   children?: React.ReactNode[];
@@ -14,7 +14,7 @@ const RadioGroup = ({ label, value, onChange, children }: RadioGroupProps) => {
 
   return (
     <div>
-      <h3 className="text-primary text-[14px]">{label}</h3>
+      <h3 className="text-[16px] font-semibold  text-black">{label}</h3>
       <div className="radio-group">
         {React.Children.map(children, (child) => {
           if (React.isValidElement(child)) {
