@@ -18,6 +18,9 @@ const config: Config = {
         yellow: '#F5AE36',
         green: '#73D288',
       },
+      boxShadow: {
+        'custom-green': '0 4px 6px rgba(0, 128, 0, 0.5)', // Ví dụ màu xanh lá cây
+      },
       fontFamily: {
         sans: [
           '-apple-system',

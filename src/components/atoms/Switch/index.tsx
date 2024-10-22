@@ -1,7 +1,9 @@
 import React, { type ChangeEvent, type ReactNode } from 'react';
 import { Switch as SwitchUI } from '@nextui-org/switch';
 
-interface propsSwitch {
+import './css.css';
+
+export interface propsSwitch {
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
   defaultSelected?: boolean;
   isDisabled?: boolean;
@@ -13,19 +15,30 @@ interface propsSwitch {
   required?: boolean;
 }
 
+const sizeClasses = {
+  sm: '!w-[2.2rem] h-[1rem]',
+  md: 'w-[2.5rem] !h-[1rem]',
+  lg: 'w-[2.77rem] h-[1rem] ',
+};
+
 export default function Switch({
   onChange,
   defaultSelected,
   isDisabled,
   value,
-  size,
-  color,
+  size = 'md',
   children,
   name,
   required,
+  color = 'primary',
 }: propsSwitch) {
+  const wrapperClass = `overflow-visible p-0 ${sizeClasses[size]}`;
+
   return (
     <SwitchUI
+      classNames={{
+        wrapper: wrapperClass,
+      }}
       required={required}
       name={name}
       onChange={onChange}
