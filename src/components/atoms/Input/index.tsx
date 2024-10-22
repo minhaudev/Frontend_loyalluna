@@ -1,13 +1,14 @@
-import React, { useRef, type ReactNode } from 'react';
+import React, { useRef, useState, type ReactNode } from 'react';
 import { cn } from '@/shared/utils';
 import { twMerge } from 'tailwind-merge';
 
 import { HStack } from '../HStack';
 
 interface InputProps {
-  onChange?: (value: string | string[]) => void;
+  onChange?: (value: string | string[] | number) => void | undefined;
   className?: string;
   position?: 'left' | 'right' | 'center';
+
   value: string | string[] | number;
   type?: string;
   helperText?: string;
@@ -34,12 +35,40 @@ const sizeClasses = {
   sm: 'py-1',
   md: 'py-2',
   lg: 'py-3',
-  '2xlg': 'h-[120px]',
-  '3xlg': 'h-[170px]',
+  '2xlg': 'min-h-[120px]',
+  '3xlg': 'min-h-[170px]',
 };
 
 const Input: React.FC<InputProps> = (props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [valueInput, setValueInput] = useState<string | string[] | number>(props.value);
+
+  const onChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let newValue = e.target.value;
+
+    if (props.type === 'number') {
+      // Loại bỏ toàn bộ ký tự không phải số hoặc dấu chấm
+      newValue = newValue.replace(/[^\d.]/g, '');
+
+      // Chỉ cập nhật state và gọi onChange nếu giá trị khác với giá trị trước đó
+      if (newValue !== valueInput) {
+        setValueInput(newValue);
+        props.onChange && props.onChange(newValue);
+      }
+    } else {
+      // Xử lý cho trường hợp không phải số
+      if (newValue !== valueInput) {
+        setValueInput(newValue);
+        props.onChange && props.onChange(newValue);
+      }
+    }
+  };
+
+  const handleFocus = () => {
+    if (inputRef.current) {
+      inputRef.current.select();
+    }
+  };
 
   const sizeClass = sizeClasses[props.size || 'md'];
   const positionClass = positionClasses[props.position || 'left'];
@@ -70,7 +99,10 @@ const Input: React.FC<InputProps> = (props) => {
         <div className="flex flex-wrap items-center ">
           {!props.isNote ? (
             <input
+              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
               ref={inputRef}
+              onChange={onChangeValue}
+              onFocus={handleFocus} // Thêm sự kiện onFocus
               className={cn(
                 'min-w-[120px] grow rounded border-0 px-3 text-[#0F1824] outline-none',
                 {
@@ -86,7 +118,7 @@ const Input: React.FC<InputProps> = (props) => {
               )}
               placeholder={props.placeholder}
               type={props.type}
-              value={props.value}
+              value={valueInput}
               aria-invalid={props.isError ? 'true' : 'false'}
               disabled={props.isDisabled}
             />
@@ -96,12 +128,12 @@ const Input: React.FC<InputProps> = (props) => {
               tabIndex={0}
               className={twMerge(
                 cn(
-                  'hover:border-primary min-w-[120px] grow rounded border-0 text-[#0F1824] outline-none hover:border',
+                  ' min-w-[120px] grow rounded border-0 py-1 text-[#0F1824] outline-none',
                   {
                     'pl-[35px]': props.prefix,
                     'pl-2': !props.prefix,
                     'pr-[30px]': props.suffix,
-                    'pr-[2px]': !props.suffix,
+                    'pr-[6px]': !props.suffix,
                     'pr-2': props.position === 'right',
                     'cursor-not-allowed text-gray-400': props.isDisabled,
                     'cursor-text': !props.isDisabled,
@@ -113,7 +145,7 @@ const Input: React.FC<InputProps> = (props) => {
               )}
               onKeyDown={(e) => props.isDisabled && e.preventDefault()}
             >
-              {props.value}
+              {valueInput}
             </div>
           )}
         </div>

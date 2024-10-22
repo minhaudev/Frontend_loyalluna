@@ -33,3 +33,15 @@ body {
   width: 8px; 
   transition: width 0.3s ease;
 } */
+
+/* Ẩn nút tăng giảm trên các trình duyệt Chrome, Safari và Edge */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Ẩn nút tăng giảm trên trình duyệt Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}

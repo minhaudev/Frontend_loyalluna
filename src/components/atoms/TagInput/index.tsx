@@ -1,4 +1,4 @@
-import React, { useRef, useState, type ReactNode } from 'react';
+import React, { useEffect, useRef, useState, type ReactNode } from 'react';
 import { cn } from '@/shared/utils';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -28,18 +28,23 @@ const sizeClasses = {
 
 const InputTag: React.FC<InputProps> = (props) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [visibleArray, setVisibleArray] = useState<string[]>([]);
+  const [visibleArray, setVisibleArray] = useState<string[]>(props.value);
   const [inputValue, setInputValue] = useState('');
   const [isForcus, setIsFourcus] = useState(true);
 
+  useEffect(() => {
+    setVisibleArray(props.value);
+  }, [props.value]);
+
   const sizeClass = sizeClasses[props.size || 'md'];
-  const handleOnchange = (e: any) => {
+
+  const handleOnchange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
+
   const handleDeleteTask = (taskToDelete: string, e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const updatedTags = props.value.filter((task) => task !== taskToDelete);
-    setVisibleArray(updatedTags);
     props.onChange?.(updatedTags);
   };
 
@@ -54,12 +59,10 @@ const InputTag: React.FC<InputProps> = (props) => {
         const updatedTags = [...currentTags, trimmedValue];
         props.onChange?.(updatedTags);
         setInputValue('');
-        setVisibleArray(updatedTags);
       }
       e.preventDefault();
     }
   };
-  console.log(props.value);
 
   const handleOnForcus = () => {
     setIsFourcus(true);
@@ -96,36 +99,33 @@ const InputTag: React.FC<InputProps> = (props) => {
       </HStack>
 
       <div
-        className={
-          (cn('focus-within:!border-primary relative w-full rounded border '),
-          props.isDisabled ? 'border-1' : 'hover:border-gray-800')
-        }
+        className={cn(
+          props.isDisabled
+            ? 'border-1'
+            : ' focus-within:!border-primary border-1 relative w-full rounded hover:border-gray-800'
+        )}
       >
-        <div className="flex  flex-wrap items-center px-3">
+        <div className="flex flex-wrap items-center pl-3">
           <div
             onClick={handleOnForcus}
-            onMouseDown={(e) => {
-              e.preventDefault();
-            }}
+            onMouseDown={(e) => e.preventDefault()}
             className="flex max-h-[9.57143rem] w-full cursor-pointer flex-wrap items-center overflow-y-auto "
           >
             {visibleArray.map((task, index) => (
               <div key={index} className={cn('bg-primary-light p-1')}>
-                <div className="border-md flex items-center rounded-2xl  bg-[#D9EDFF] py-[2px]">
+                <div className="border-md flex items-center rounded-2xl  bg-[#D9EDFF] p-[6px]">
                   <span
                     onClick={handleOnForcus}
-                    className={cn('  max-w-[100px] truncate   text-gray-800', {
+                    className={cn('max-w-[100px] truncate text-gray-800', {
                       'cursor-pointer px-1': task.startsWith('+'),
                     })}
                   >
                     {task}
                   </span>
-                  {typeof task !== 'string' || !task.startsWith('+') ? (
+                  {!task.startsWith('+') && (
                     <button
-                      onMouseDown={(e) => {
-                        e.preventDefault();
-                      }}
-                      className={cn(' flex items-center justify-center hover:text-red-700')}
+                      onMouseDown={(e) => e.preventDefault()}
+                      className={cn('flex items-center justify-center pl-[2px] hover:text-red-700')}
                       onClick={(e) => handleDeleteTask(task, e)}
                       aria-label={`Xóa tag ${task}`}
                     >
@@ -134,7 +134,7 @@ const InputTag: React.FC<InputProps> = (props) => {
                         icon={faXmark}
                       />
                     </button>
-                  ) : null}
+                  )}
                 </div>
               </div>
             ))}
