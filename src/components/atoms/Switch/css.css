@@ -1,0 +1,8 @@
+.bg-white {
+  background-color: #0088ff;
+  width: 1.27rem;
+  height: 1.27rem;
+}
+.group[data-selected='true'] .group-data-\[selected\=true\]\:bg-primary {
+  background-color: #cce7ff !important;
+}
