@@ -4,44 +4,32 @@ import { cn } from '@/shared/utils';
 import { HStack } from '../HStack';
 
 interface PropsCounterInput {
-  value?: string;
-  onChange: (value: string) => void;
+  value?: number;
+  setValue: (value: number) => void;
   position?: 'left' | 'right' | 'center';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
-  setValue: (value: string) => void;
 }
 
 export default function CounterInput({
-  value = '',
-  onChange,
+  value = 0,
   setValue,
   position = 'center',
   size = 'sm',
   className,
 }: PropsCounterInput) {
-  const formatValue = (num: string) => {
-    return num.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
-
   const decreaseNumber = () => {
-    const currentValue = BigInt(value || '0'); // Chuyển thành BigInt
-    const newValue = currentValue > BigInt(0) ? currentValue - BigInt(1) : BigInt(0);
-    setValue(newValue.toString()); // Chuyển thành chuỗi để hiển thị
+    if (value > 0) setValue(value - 1);
   };
 
   const increaseNumber = () => {
-    const currentValue = BigInt(value || '0');
-    const newValue = currentValue + BigInt(1);
-    setValue(newValue.toString());
+    setValue(value + 1);
   };
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value.replace(/\D/g, '');
-    setValue(inputValue);
-    onChange(inputValue);
+    const inputValue = e.target.value.replace(/\D/g, '').slice(0, 15);
+    setValue(Number(inputValue || 0));
   };
-
   const positionClass = {
     left: 'text-left',
     center: 'text-center',
@@ -55,32 +43,31 @@ export default function CounterInput({
   }[size];
 
   return (
-    <HStack className={`${className}`}>
-      <div className={`flex w-full gap-1 ${sizeClass}`}>
-        <button
-          onClick={decreaseNumber}
-          className="flex size-4 items-center justify-center rounded-full bg-[#A8ADB3] text-center text-white"
-        >
-          -
-        </button>
+    <HStack className={cn('w-full gap-1', className)}>
+      <button
+        onClick={decreaseNumber}
+        className="flex size-4 items-center justify-center rounded-full bg-[#A8ADB3] text-white"
+      >
+        -
+      </button>
 
-        <input
-          className={cn(
-            'border-primary flex-1 border-b-[1.5px] focus:outline-none',
-            positionClass,
-            sizeClass
-          )}
-          type="text"
-          onChange={handleOnChange}
-          value={formatValue(value)}
-        />
-        <button
-          onClick={increaseNumber}
-          className="flex size-4 items-center justify-center rounded-full bg-[#A8ADB3] text-center text-white"
-        >
-          +
-        </button>
-      </div>
+      <input
+        className={cn(
+          'border-primary flex-1 border-b-[1.5px] focus:outline-none',
+          positionClass,
+          sizeClass
+        )}
+        type="text"
+        onChange={handleOnChange}
+        value={value}
+      />
+
+      <button
+        onClick={increaseNumber}
+        className="flex size-4 items-center justify-center rounded-full bg-[#A8ADB3] text-white"
+      >
+        +
+      </button>
     </HStack>
   );
 }
